@@ -30,6 +30,8 @@ bindsym $mod+q kill
 # start program launcher
 bindsym $mod+space exec "rofi -combi-modi window,drun,ssh,calc -font \\"hack 28\\" -show combi -icon-theme \\"Papirus\\" -show-icons"
 
+#title_window_icon yes
+
 ################################################################################################
 ## sound-section - DO NOT EDIT if you wish to automatically upgrade Alsa -> Pulseaudio later! ##
 ################################################################################################
