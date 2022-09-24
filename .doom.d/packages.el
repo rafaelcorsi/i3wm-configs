@@ -8,6 +8,25 @@
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
+(package! typescript-mode)
+(package! spacemacs-theme)
+(package! rainbow-delimiters)
+(package! dts-mode)
+(package! dired-icon)
+(package! org-roam)
+(package! org-roam-ui)
+(package! helm-swoop) ;; List match lines to another buffer
+(package! focus) ;; Focus mode
+(package! aggressive-completion)
+(package! aggressive-indent)
+(package! direnv)
+(package! python-pytest)
+(package! transpose-frame)
+(package! org-ref)
+(package! direnv)
+(package! citar)
+(package! consult-notes)
+
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:

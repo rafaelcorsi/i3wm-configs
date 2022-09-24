@@ -70,7 +70,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(fzf git zsh-direnv)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -108,7 +108,17 @@ function cd {
 }
 
 # restore last saved path
-if [ -f ~/.last_dir ]
-    then cd `cat ~/.last_dir`
-fi
+#if [ -f ~/.last_dir ]
+#    then cd `cat ~/.last_dir`
+#fi
 
+eval "$(direnv hook bash)"
+
+autoload -Uz compinit
+compinit
+autoload -Uz bashcompinit
+bashcompinit
+source "$HOME/.repobee/completion/bash_completion.sh"
+
+# Created by `userpath` on 2022-09-15 19:09:01
+export PATH="$PATH:/home/corsi/.repobee/bin"
