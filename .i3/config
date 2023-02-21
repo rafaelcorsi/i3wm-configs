@@ -45,7 +45,6 @@ bindsym XF86MonBrightnessDown exec "xbacklight -dec 10; notify-send 'brightness 
 
 # Start Applications
 bindsym $mod+Shift+Return exec firefox
-bindsym Print exec --no-startup-id i3-scrot
 bindsym $mod+Print --release exec --no-startup-id i3-scrot -w
 bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s
 bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
@@ -73,7 +72,6 @@ bindsym $Alt+Tab workspace back_and_forth
 # split orientation
 bindsym $mod+h split h;exec notify-send 'tile horizontally'
 bindsym $mod+v split v;exec notify-send 'tile vertically'
-#bindsym $mod+q split toggle
 
 # toggle fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
@@ -85,12 +83,6 @@ bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
-
-# toggle sticky
-bindsym $mod+Shift+s sticky toggle
-
-# focus the parent container
-bindsym $mod+a focus parent
 
 # move the currently focused window to the scratchpad
 bindsym $mod+Shift+minus move scratchpad
@@ -157,12 +149,6 @@ workspace $ws6 output eDP1
 workspace $ws7 output eDP1
 workspace $ws8 output eDP1
 
-# Open applications on specific workspaces
-# assign [class="Thunderbird"] $ws1
-# assign [class="Pale moon"] $ws2
-# assign [class="Pcmanfm"] $ws3
-# assign [class="Skype"] $ws5
-
 # Open specific applications in floating mode
 for_window [title="File Transfer*"] floating enable
 for_window [class="Galculator"] floating enable border pixel 1
@@ -171,13 +157,10 @@ for_window [class="Manjaro Settings Manager"] floating enable border normal
 for_window [class="Pamac-manager"] floating enable
 for_window [class="Pavucontrol"] floating enable
 for_window [class="FFPWA-01G4Q6RK7834MT1R8XE70DXSCJ"] floating enable sticky enable
-for_window [class="Soffice"] floating enable
+for_window [class="xpad" instance="xpad"] floating enable
 
 # switch to workspace with urgent window automatically
 for_window [urgent=latest] focus
-
-# reload the configuration file
-bindsym $mod+Shift+c reload
 
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
@@ -185,12 +168,6 @@ bindsym $mod+Shift+r restart
 # Resize window (you can also use the mouse for that)
 bindsym $mod+r mode "resize"
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
-        bindsym j resize shrink width 5 px or 5 ppt
-        bindsym k resize grow height 5 px or 5 ppt
-        bindsym l resize shrink height 5 px or 5 ppt
-        bindsym semicolon resize grow width 5 px or 5 ppt
-
         # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
         bindsym Down resize grow height 10 px or 10 ppt
@@ -219,7 +196,7 @@ exec_always --no-startup-id fix_xcursor
 exec --no-startup-id cbatticon
 exec --no-startup-id touchegg
 exec_always --no-startup-id "feh --bg-fill /home/corsi/work/wallpapers/backgrounds/current.jpg"
-exec_always --no-startup-id "/home/corsi/.config/polybar/launch.sh --colorblocks"
+exec_always --no-startup-id "polybar"
 
 # Theme colors
 # class                   border  backgr. text    indic.   child_border
@@ -235,13 +212,8 @@ exec_always --no-startup-id "/home/corsi/.config/polybar/launch.sh --colorblocks
 #############################
 
 # Set inner/outer gaps
-gaps inner 8
-gaps outer -2
-
-# Additionally, you can issue commands with the following syntax. This is useful to bind keys to changing the gap size.
-# gaps inner|outer current|all set|plus|minus <px>
-# gaps inner all set 10
-# gaps outer all plus 5
+gaps inner 5
+gaps outer 5
 
 # Smart gaps (gaps used if only more than one container on the workspace)
 smart_gaps on

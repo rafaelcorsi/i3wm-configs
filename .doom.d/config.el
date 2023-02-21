@@ -1,101 +1,137 @@
-;;; $Doomdir/config.el -*- lexical-binding: t; -*-
+;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
-;; clients, file templates and snippets.
+;; clients, file templates and snippets. It is optional.
 (setq user-full-name "Rafael Corsi"
       user-mail-address "corsiferrao@gmail.com")
 
-;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
-;; are the three important ones:
+;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
-;; + `doom-font'
-;; + `doom-variable-pitch-font'
-;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
+;; - `doom-font' -- the primary font to use
+;; - `doom-variable-pitch-font' -- a non-monospace font (where applicable)
+;; - `doom-big-font' -- used for `doom-big-font-mode'; use this for
 ;;   presentations or streaming.
+;; - `doom-unicode-font' -- for unicode glyphs
+;; - `doom-serif-font' -- for the `fixed-pitch-serif' face
 ;;
-;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
-;; font string. You generally only need these two
- (setq doom-font (font-spec :family "Dank Mono" :size 30)
-       doom-variable-pitch-font (font-spec :family "sans" :size 14))
+;; See 'C-h v doom-font' for documentation and more examples of what they
+;; accept. For example:
+;;
+;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
+;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
+;;
+;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
+;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
+;; refresh your font settings. If Emacs still can't find your font, it likely
+;; wasn't installed correctly. Font issues are rarely Doom issues!
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one-light)
+(setq doom-theme 'doom-solarized-light)
+
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+(setq display-line-numbers-type 'relative)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
 
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
+;; Fonte
+(setq doom-font (font-spec :family "Dank Mono" :size 30)
+doom-variable-pitch-font (font-spec :family "Dank Mono" :size 14))
 
-(setq ispell-dictionary "pt_BR")
-;  ;; ispell-set-spellchecker-params has to be called
-;  ;; before ispell-hunspell-add-multi-dic will work
-(ispell-set-spellchecker-params)
-;  (ispell-hunspell-add-multi-dic "pt_BR,en_US")
-
+;; permite navegar na janela com shift arrows
+;; precisa de ui / (window-select +numbers)
 (windmove-default-keybindings)
 
-(defun remove-newlines-in-region ()
-  "Removes all newlines in the region."
-  (interactive)
-  (save-restriction
-    (narrow-to-region (point) (mark))
-    (goto-char (point-min))
-    (while (search-forward "\n" nil t) (replace-match "" nil t))))
-;(global-set-key [f8] 'remove-newlines-in-region)
-
-(setq doom-modeline-height 1)
-(set-face-attribute 'mode-line nil :height 50)
-(set-face-attribute 'mode-line-inactive nil :height 50)
-
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
-(add-to-list 'auto-mode-alist '("\\.jsx\\'" . typescript-mode))
-
-(setf (alist-get 'markdown-mode +spell-excluded-faces-alist)
-      '(markdown-code-face
-        markdown-reference-face
-        markdown-link-face
-        markdown-url-face
-        markdown-markup-face
-        markdown-html-attr-value-face
-        markdown-html-attr-name-face
-        markdown-html-tag-name-face))
-
-(setq display-line-numbers-type 'relative)
-
-
+; org roam
 (setq org-roam-directory (file-truename "~/org-roam"))
-(org-roam-db-autosync-mode)
+(setq org-directory (file-truename "~/org-roam"))
+(setq org-agenda-files '("~/org-roam"))
 
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-(add-hook 'after-init-hook 'global-company-mode)
+; disabel autoformat on markdown
+(setq-hook! 'markdown-mode-hook +format-with :none)
 
-(setq default-input-method "portuguese-prefix")
+;; ispell dictionaty
+(setq ispell-dictionary "pt_BR")
+(customize-set-variable 'ispell-extra-args '("--sug-mode=ultra"))
 
-(setq! bibtex-completion-bibliography '("~/Artigos/library.bib"))
-(setq! citar-bibliography '("~/Artigos/library.bib"))
+(use-package languagetool
+  :ensure t
+  :defer t
+  :commands (languagetool-check
+             languagetool-clear-suggestions
+             languagetool-correct-at-point
+             languagetool-correct-buffer
+             languagetool-set-language
+             languagetool-server-mode
+             languagetool-server-start
+             languagetool-server-stop)
+  :config
+  (setq languagetool-java-arguments '("-Dfile.encoding=UTF-8")
+        languagetool-console-command "~/opt/LanguageTool/languagetool-commandline.jar"
+        languagetool-server-command "~/opt/LanguageTool/languagetool-server.jar"))
 
-(add-to-list 'display-buffer-alist
-             '("\\*org-roam\\*"
-               (display-buffer-in-side-window)
-               (side . right)
-               (slot . 0)
-               (window-width . 0.33)
-               (window-parameters . ((no-other-window . t)
-                                     (no-delete-other-windows . t)))))
+; A company-backend for human language texts based on word frequency dictionaries.
+; M-x company-wordfreq-download-list
+(add-hook 'text-mode-hook (lambda ()
+                            (setq-local company-backends '(company-wordfreq))
+                            (setq-local company-transformers nil)))
 
-(setq consult-notes-sources
-      '(("Org"             ?o "~/org-roam")))
+; https://stackoverflow.com/questions/17435995/paste-an-image-on-clipboard-to-emacs-org-mode-file-without-saving-it
+(defun my-org-screenshot ()
+  "Take a screenshot into a time stamped unique-named file in the
+same directory as the org-buffer and insert a link to this file."
+  (interactive)
+  (setq filename
+        (concat
+         (make-temp-name
+          (concat (buffer-file-name)
+                  "_"
+                  (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
+  (call-process "import" nil nil nil filename)
+  (insert (concat "[[" filename "]]"))
+  (org-display-inline-images))
 
-;; Here are some additional functions/macros that could help you configure Doom:
+; to add a quote from a .bibitex
+(defun org-insert-quote ()
+  "Insert org quote block"
+  (interactive)
+  (insert
+   (format "
+#+BEGIN_QUOTE
+
+#+END_QUOTE"
+    )
+   )
+  (forward-line -1)
+  (goto-char (line-end-position))
+)
+
+; export org to pdf
+(require 'org-roam-export)
+
+
+;; Whenever you reconfigure a package, make sure to wrap your config in an
+;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
+;;
+;;   (after! PACKAGE
+;;     (setq x y))
+;;
+;; The exceptions to this rule:
+;;
+;;   - Setting file/directory variables (like `org-directory')
+;;   - Setting variables which explicitly tell you to set them before their
+;;     package is loaded (see 'C-h v VARIABLE' to look up their documentation).
+;;   - Setting doom variables (which start with 'doom-' or '+').
+;;
+;; Here are some additional functions/macros that will help you configure Doom.
 ;;
 ;; - `load!' for loading external *.el files relative to this one
 ;; - `use-package!' for configuring packages
@@ -108,6 +144,8 @@
 ;; To get information about any of these functions/macros, move the cursor over
 ;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
 ;; This will open documentation for it, including demos of how they are used.
+;; Alternatively, use `C-h o' to look up a symbol (functions, variables, faces,
+;; etc).
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
